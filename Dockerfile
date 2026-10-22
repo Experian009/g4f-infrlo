@@ -13,6 +13,15 @@ RUN apt-get update \
     && cp /tmp/g4f-src/requirements-slim.txt /app/requirements.txt \
     && rm -rf /tmp/g4f-src
 
+# Chromium + Xvfb: in current g4f the ChatGPT provider drives a real
+# (headed) browser over CDP, so the image needs a browser binary and a
+# virtual display. The google-chrome symlink covers launchers that look
+# for Chrome under that name.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends chromium xvfb fonts-liberation \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sf /usr/bin/chromium /usr/bin/google-chrome
+
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY entrypoint.sh /app/entrypoint.sh

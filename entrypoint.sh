@@ -1,10 +1,12 @@
 #!/bin/sh
-# gpt4free on Infrlo.
+# gpt4free (Render / Docker hosts).
 # - Picks a writable base dir for g4f's config/cache (prefers /data,
 #   falls back to /tmp if /data is not writable).
 # - If the HAR_JSON env var is set, seeds the ChatGPT session file into
-#   the cookies dir before starting (phase 2; not needed for boot test).
-# - Starts the g4f API server on $PORT (default 8080).
+#   the cookies dir before starting.
+# - Starts the g4f API server on $PORT (default 8080) under xvfb-run:
+#   the ChatGPT provider launches a headed browser over CDP and needs a
+#   (virtual) display.
 set -e
 
 BASE=/data
@@ -22,4 +24,4 @@ if [ -n "$HAR_JSON" ]; then
 fi
 
 echo "entrypoint: G4F_CONFIG_DIR=$G4F_CONFIG_DIR PORT=${PORT:-8080}"
-exec python -m g4f api --port "${PORT:-8080}"
+exec xvfb-run -a -s "-screen 0 1280x800x24" python -m g4f api --port "${PORT:-8080}"
