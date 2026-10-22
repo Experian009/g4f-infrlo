@@ -18,7 +18,7 @@ RUN apt-get update \
 # virtual display. The google-chrome symlink covers launchers that look
 # for Chrome under that name.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends chromium xvfb fonts-liberation \
+    && apt-get install -y --no-install-recommends chromium xvfb xauth fonts-liberation \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /usr/bin/chromium /usr/bin/google-chrome
 
